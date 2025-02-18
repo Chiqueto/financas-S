@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
+import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 
 class CadastroUsuarios extends React.Component {
   state = {
@@ -11,10 +12,11 @@ class CadastroUsuarios extends React.Component {
   };
 
   cadastrar = () => {
-    console.log("Nome: ", this.state.nome);
-    console.log("Email: ", this.state.email);
-    console.log("Senha: ", this.state.senha);
-    console.log("Senha Repetição: ", this.state.senhaRepeticao);
+    console.log(this.state);
+  };
+
+  cancelar = () => {
+    this.props.history.push("/login");
   };
 
   render() {
@@ -78,7 +80,11 @@ class CadastroUsuarios extends React.Component {
                 >
                   Salvar
                 </button>
-                <button type="button" className="btn btn-danger">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={this.cancelar}
+                >
                   Cancelar
                 </button>
               </div>
@@ -90,4 +96,4 @@ class CadastroUsuarios extends React.Component {
   }
 }
 
-export default CadastroUsuarios;
+export default withRouter(CadastroUsuarios);
