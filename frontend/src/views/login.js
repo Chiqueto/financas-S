@@ -2,8 +2,16 @@ import React from "react";
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import UsuarioService from "../app/services/usuarioService.js";
+import LocalStorageService from "../app/services/localstorageService.js";
+import { mensagemErro } from "../components/toastr.js";
 
 class Login extends React.Component {
+  constructor() {
+    super();
+    this.service = new UsuarioService();
+  }
+
   state = {
     email: "",
     senha: "",
@@ -14,8 +22,18 @@ class Login extends React.Component {
   };
 
   entrar = () => {
-    console.log("Email: ", this.state.email);
-    console.log("Senha: ", this.state.senha);
+    this.service
+      .autenticar({
+        email: this.state.email,
+        senha: this.state.senha,
+      })
+      .then((response) => {
+        LocalStorageService.adicionarItem("_usuario_logado", response.data);
+        this.props.history.push("/home");
+      })
+      .catch((erro) => {
+        mensagemErro(erro.response.data);
+      });
   };
 
   render() {
