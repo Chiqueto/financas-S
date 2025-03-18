@@ -8,8 +8,6 @@ import com.chiqueto.financaspessoais.model.entity.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	
-	Optional<Usuario> findByEmailAndNome(String email, String nome);
-	
 	Optional<Usuario> findByEmail(String email);
 	
 	boolean existsByEmail(String email);

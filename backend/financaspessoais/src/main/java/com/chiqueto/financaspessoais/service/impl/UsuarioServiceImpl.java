@@ -1,11 +1,17 @@
 package com.chiqueto.financaspessoais.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chiqueto.financaspessoais.exceptions.ErroAutenticaco;
+import com.chiqueto.financaspessoais.exceptions.RegraNegocioException;
 import com.chiqueto.financaspessoais.model.entity.Usuario;
 import com.chiqueto.financaspessoais.repository.UsuarioRepository;
 import com.chiqueto.financaspessoais.service.UsuarioService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -20,19 +26,28 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public Usuario autenticar(String email, String senha) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Usuario> usuario = repository.findByEmail(email);
+		
+		if(!usuario.isPresent()) {
+			throw new ErroAutenticaco("Usuário não encontrado para o email informado!");
+		}
+		
+		return usuario.get();
 	}
 
 	@Override
+	@Transactional
 	public Usuario salvarUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
+		validarEmail(usuario.getEmail());
+		return repository.save(usuario);
 	}
 
 	@Override
 	public void validarEmail(String email) {
-		repository.
+		boolean existe = repository.existsByEmail(email);
+		if (existe) {
+			throw new RegraNegocioException("Já Existe um usuário cadastrado com esse e-mail!");
+		}
 		
 	}
 	
