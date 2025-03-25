@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chiqueto.financaspessoais.exceptions.ErroAutenticaco;
+import com.chiqueto.financaspessoais.exceptions.ErroAutenticacao;
 import com.chiqueto.financaspessoais.exceptions.RegraNegocioException;
 import com.chiqueto.financaspessoais.model.entity.Usuario;
 import com.chiqueto.financaspessoais.repository.UsuarioRepository;
@@ -29,7 +29,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 		Optional<Usuario> usuario = repository.findByEmail(email);
 		
 		if(!usuario.isPresent()) {
-			throw new ErroAutenticaco("Usuário não encontrado para o email informado!");
+			throw new ErroAutenticacao("Usuário não encontrado para o email informado!");
+		}
+		
+		if(!usuario.get().getSenha().equals(senha)) {
+			throw new ErroAutenticacao("Senha inválida.");
 		}
 		
 		return usuario.get();
