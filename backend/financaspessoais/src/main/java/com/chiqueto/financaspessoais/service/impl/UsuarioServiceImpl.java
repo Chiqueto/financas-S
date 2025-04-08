@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chiqueto.financaspessoais.exceptions.ErroAutenticacao;
 import com.chiqueto.financaspessoais.exceptions.RegraNegocioException;
@@ -11,7 +12,6 @@ import com.chiqueto.financaspessoais.model.entity.Usuario;
 import com.chiqueto.financaspessoais.repository.UsuarioRepository;
 import com.chiqueto.financaspessoais.service.UsuarioService;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -53,6 +53,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 			throw new RegraNegocioException("Já Existe um usuário cadastrado com esse e-mail!");
 		}
 		
+	}
+
+	@Override
+	public Optional<Usuario> obterPorId(Long id) {
+		return repository.findById(id);
 	}
 	
 }
