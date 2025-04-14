@@ -1,6 +1,7 @@
 
 package com.chiqueto.financaspessoais.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface LancamentoService {
 	void validar(Lancamento lancamento);
 	
 	Optional<Lancamento> obterPorId (Long id);
+	
+	BigDecimal ObeterSaldoPorUsuario(Long id);
 }

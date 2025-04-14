@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chiqueto.financaspessoais.api.dto.AtualizaStatusDTO;
 import com.chiqueto.financaspessoais.api.dto.LancamentoDTO;
 import com.chiqueto.financaspessoais.enums.StatusLancamento;
 import com.chiqueto.financaspessoais.enums.TipoLancamento;
@@ -60,6 +61,29 @@ public class LancamentoResource {
 		}).orElseGet(() -> new ResponseEntity("Lançamento não encontrado na base de dados.", HttpStatus.BAD_REQUEST));
 	};
 	
+	@PutMapping("{id}/atualiza-status")
+	public ResponseEntity atualizaStatus (@PathVariable("id") Long id, @RequestBody AtualizaStatusDTO dto) {
+		return service.obterPorId(id).map(entidade -> {
+			StatusLancamento statusSelecionado = StatusLancamento.valueOf(dto.getStatus());
+			
+			if(statusSelecionado == null) {
+				return ResponseEntity.badRequest().body("Não foi possível atualizar o status do lançamento, envie um status válido");
+			}
+			try {
+				entidade.setStatus(statusSelecionado);
+				service.atualizar(entidade);
+				return ResponseEntity.ok(entidade);
+			}catch(RegraNegocioException e){
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
+		}).orElseGet(() -> 
+			new ResponseEntity("Lançamento não encontrado na base de dados.", HttpStatus.BAD_REQUEST)
+			);
+				
+	}
+	
+
+	
 	@DeleteMapping("{id}")
 	public ResponseEntity deletar(@PathVariable("id") Long id) {
 		return service.obterPorId(id).map(entity -> {
@@ -104,9 +128,12 @@ public class LancamentoResource {
 				.orElseThrow( () -> new RegraNegocioException("Usuario não encontrado"));
 		
 		lancamento.setUsuario(usuario);
-		lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
-		lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
-		
+		if(dto.getTipo() != null){
+			lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
+		}
+		if(dto.getStatus() != null) {
+			lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+		}
 		return lancamento;
 	}
 }
