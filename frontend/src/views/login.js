@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../components/card";
-import FormGroup from "../components/form-group";
+import FormGroup from "../components/formGroup.js";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import UsuarioService from "../app/services/usuarioService.js";
 import LocalStorageService from "../app/services/localstorageService.js";

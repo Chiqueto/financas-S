@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./main/App";
-import "bootswatch/dist/cyborg/bootstrap.min.css";
+import "bootswatch/dist/lux/bootstrap.min.css";
 import "./custom.css";
 
 const container = document.getElementById("root");

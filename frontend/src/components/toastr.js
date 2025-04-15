@@ -29,3 +29,7 @@ export function mensagemErro(mensagem) {
 export function mensagemSucesso(mensagem) {
   mostrarMensagem("Sucesso", mensagem, "success");
 }
+
+export function mensagemAlerta(mensagem, tipo) {
+  mostrarMensagem("Alerta", mensagem, tipo);
+}

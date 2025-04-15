@@ -23,7 +23,7 @@ function Navbar() {
           <ul className="navbar-nav me-auto ">
             <NavbarItem href="#/home" label="Home" />
             <NavbarItem href="#/cadastro-usuarios" label="Usuários" />
-            <NavbarItem href="#/" label="Lançamentos" />
+            <NavbarItem href="#/consultalancamentos" label="Lançamentos" />
             <NavbarItem href="#/login" label="Sair" />
           </ul>
         </div>
