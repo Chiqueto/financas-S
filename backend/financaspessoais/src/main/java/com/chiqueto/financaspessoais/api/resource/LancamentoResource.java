@@ -118,6 +118,18 @@ public class LancamentoResource {
 		return ResponseEntity.ok(lancamentos);
 	}
 	
+	@GetMapping("{id}")
+	public ResponseEntity obterPorId(@PathVariable("id") Long id) {
+		Optional<Lancamento> lancamento = service.obterPorId(id);
+		
+		if(!lancamento.isPresent()) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		
+		return ResponseEntity.ok(lancamento);
+	};
+	
+	
 	public Lancamento converter(LancamentoDTO dto) {
 		Lancamento lancamento = new Lancamento();
 		lancamento.setDescricao(dto.getDescricao());

@@ -5,8 +5,11 @@ import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import UsuarioService from "../app/services/usuarioService.js";
 import LocalStorageService from "../app/services/localstorageService.js";
 import { mensagemErro } from "../components/toastr.js";
+import AuthContext from "../app/services/authContext.js";
 
 class Login extends React.Component {
+  static contextType = AuthContext;
+
   constructor() {
     super();
     this.service = new UsuarioService();
@@ -28,7 +31,7 @@ class Login extends React.Component {
         senha: this.state.senha,
       })
       .then((response) => {
-        LocalStorageService.adicionarItem("_usuario_logado", response.data);
+        this.context.iniciarSessao(response.data);
         this.props.history.push("/home");
       })
       .catch((erro) => {

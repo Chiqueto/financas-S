@@ -42,15 +42,15 @@ class Home extends React.Component {
             abaixo para navegar pelo sistema.
           </p>
           <p className="lead">
-            <a
+            {/* <a
               className="btn btn-primary btn-lg"
               href="#/cadastro-usuarios"
               role="button"
             >
               Cadastrar Usuário
-            </a>
+            </a> */}
             <a
-              className="btn btn-danger btn-lg"
+              className="btn btn-primary btn-lg"
               href="#/consulta-lancamentos"
               role="button"
             >

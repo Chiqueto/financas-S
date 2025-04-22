@@ -8,6 +8,7 @@ import LancamentosTable from "./lancamentosTable";
 import LancamentoService from "../../app/services/lancamentoService";
 import LocalStorageService from "../../app/services/localstorageService";
 import * as messages from "../../components/toastr";
+import { Modal, Button } from "react-bootstrap";
 
 class ConsultaLancamentos extends React.Component {
   state = {
@@ -15,6 +16,8 @@ class ConsultaLancamentos extends React.Component {
     mes: "",
     tipo: "",
     lancamentos: [],
+    showModal: false,
+    lancamentoExcluir: null,
   };
 
   constructor() {
@@ -44,6 +47,71 @@ class ConsultaLancamentos extends React.Component {
       .catch((error) => {
         messages.mensagemErro("Ocorreu um erro ao buscar os lançamentos!");
       });
+  };
+
+  atualizaStatusEfetivado = (id) => {
+    this.service
+      .efetivar(id)
+      .then((response) => {
+        messages.mensagemSucesso("Lançamento efetivado com sucesso!");
+        this.buscar();
+      })
+      .catch((error) => {
+        messages.mensagemErro("Ocorreu um erro ao efetivar o lançamento!");
+      });
+  };
+
+  editaLancamento = (id) => {
+    this.props.history.push(`/edita-lancamento/${id}`);
+  };
+
+  atualizaStatusCancelado = (id) => {
+    this.service
+      .cancelar(id)
+      .then((response) => {
+        messages.mensagemSucesso("Lançamento cancelado com sucesso!");
+        this.buscar();
+      })
+      .catch((error) => {
+        messages.mensagemErro("Ocorreu um erro ao cancelar o lançamento!");
+      });
+  };
+
+  // Função para abrir o modal
+  excluirLancamento = (id) => {
+    this.setState({ showModal: true, lancamentoExcluir: id });
+  };
+
+  // Função que confirma a exclusão
+  confirmarExclusao = () => {
+    const { lancamentoExcluir, lancamentos } = this.state;
+
+    // Filtra a lista de lançamentos para remover o item excluído
+    const lancamentosAtualizados = lancamentos.filter(
+      (lancamento) => lancamento.id !== lancamentoExcluir
+    );
+
+    // Atualiza o estado com a nova lista de lançamentos
+    this.setState({
+      lancamentos: lancamentosAtualizados,
+      showModal: false,
+      lancamentoExcluir: null,
+    });
+
+    // Chama o serviço de exclusão para remover o lançamento da base de dados
+    this.service
+      .excluir(lancamentoExcluir)
+      .then((response) => {
+        messages.mensagemSucesso("Lançamento excluído com sucesso!");
+      })
+      .catch((error) => {
+        messages.mensagemErro("Ocorreu um erro ao excluir o lançamento!");
+      });
+  };
+
+  // Função que cancela a exclusão
+  cancelarExclusao = () => {
+    this.setState({ showModal: false, lancamentoExcluir: null }); // Fecha o modal sem excluir
   };
 
   render() {
@@ -114,20 +182,52 @@ class ConsultaLancamentos extends React.Component {
                   <i className="pi pi-search pr-2"></i>
                   Buscar
                 </button>
-                <button type="button" className="btn btn-danger ">
+
+                <a
+                  className="btn btn-primary "
+                  href="#/cadastro-lancamento"
+                  role="button"
+                >
                   <i className="pi pi-plus pr-2"></i>
                   Cadastrar
-                </button>
+                </a>
               </div>
             </div>
           </div>
           <br />
           <div className="row">
             <div class="col-md-12">
-              <LancamentosTable lancamentos={this.state.lancamentos} />
+              <LancamentosTable
+                lancamentos={this.state.lancamentos}
+                atualizaStatusCancelado={this.atualizaStatusCancelado}
+                atualizaStatusEfetivado={this.atualizaStatusEfetivado}
+                excluirLancamento={this.excluirLancamento}
+                editaLancamento={this.editaLancamento}
+              />
             </div>
           </div>
         </Card>
+        {/* Modal de Confirmação */}
+        <Modal
+          show={this.state.showModal}
+          onHide={this.cancelarExclusao}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmar Exclusão</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Tem certeza que deseja excluir este lançamento?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.cancelarExclusao}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={this.confirmarExclusao}>
+              Excluir
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

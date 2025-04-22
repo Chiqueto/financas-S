@@ -22,4 +22,29 @@ export default class LancamentoService extends ApiService {
     }
     return this.get(params);
   }
+
+  cadastrar(lancamento) {
+    return this.post("#/", lancamento);
+  }
+
+  efetivar(id) {
+    return this.put(`/${id}/atualiza-status`, {
+      status: "EFETIVADO",
+    });
+  }
+  cancelar(id) {
+    return this.put(`/${id}/atualiza-status`, {
+      status: "CANCELADO",
+    });
+  }
+  editar(lancamento, id) {
+    return this.put(`/${id}`, lancamento);
+  }
+  obterLancamentoPorId(id) {
+    return this.get(`/${id}`);
+  }
+
+  excluir(id) {
+    return this.delete(`/${id}`);
+  }
 }
