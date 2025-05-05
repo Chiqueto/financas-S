@@ -100,6 +100,7 @@ public class LancamentoResource {
 			@RequestParam(value = "tipo", required = false) TipoLancamento tipo,
 			@RequestParam("usuario") Long idUsuario
 		) {
+		System.out.print(idUsuario);
 		Lancamento lancamentoFiltro = new Lancamento();
 		lancamentoFiltro.setDescricao(descricao);
 		lancamentoFiltro.setMes(mes);
@@ -115,11 +116,13 @@ public class LancamentoResource {
 		
 		List<Lancamento> lancamentos = service.buscar(lancamentoFiltro);
 		
+		System.out.print(lancamentos);
 		return ResponseEntity.ok(lancamentos);
 	}
 	
 	@GetMapping("{id}")
 	public ResponseEntity obterPorId(@PathVariable("id") Long id) {
+		System.out.print("ENTROU");
 		Optional<Lancamento> lancamento = service.obterPorId(id);
 		
 		if(!lancamento.isPresent()) {
